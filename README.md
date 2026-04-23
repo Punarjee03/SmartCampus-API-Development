@@ -1,6 +1,38 @@
 # Smart Campus Sensor & Room Management API
+Module **5COSC022W** – Client-Server Architectures <br>
+Coursework - REST API Design and Implementation using JAX-RS
 
-A RESTful API built with JAX-RS (Jersey 2.x) for the University of Westminster's "Smart Campus" initiative. This service manages Rooms and Sensors across campus, including historical sensor readings.
+---
+
+## Student Details
+
+| Field | Details |
+|---|---|
+| **Name** | P.N.T.M. Arachchige |
+| **UoW Number** | w2120300 |
+| **IIT Number** | 20231347 |
+| **Module** | 5COSC022W – Client-Server Architectures |
+
+---
+
+## 1. API Overview
+This project implements a RESTful API for managing smart campus infrastructure, specifically rooms, sensors, and sensor readings.
+
+The API allows administrators and systems to:
+
+* Register and manage rooms across the campus
+* Register sensors and associate them with rooms
+* Record historical sensor readings
+* Retrieve filtered sensor information
+* Maintain system integrity through validation and error handling
+
+The system follows the REST architectural style, where resources are accessed through standard HTTP methods such as:
+
+* GET – retrieve resources
+* POST – create resources
+* DELETE – remove resources
+
+The API is implemented using JAX-RS (Jersey 2.41), Java 11, Maven, and deployed on Apache Tomcat 9. All data is stored in-memory using `HashMap` and `ArrayList` — no database is used.
 
 ---
 
@@ -47,7 +79,11 @@ SmartCampusAPI/
     └── webapp/WEB-INF/
         └── web.xml
 ```
+---
+### API Routes
 
+Base API URL - `http://localhost:8080/smart-campus-api/api/v1`
+---
 ---
 
 ## How to Build and Run
@@ -57,33 +93,16 @@ SmartCampusAPI/
 - Apache Maven 3.6+
 - Apache Tomcat 9.x
 
-### Step 1 – Clone the repository
-```bash
-git clone https://github.com/<your-username>/SmartCampusAPI.git
-cd SmartCampusAPI
-```
+# **How to Run the Project**
 
-### Step 2 – Build the WAR file
-```bash
-mvn clean package
-```
-This produces `target/SmartCampusAPI.war`.
-
-### Step 3 – Deploy to Tomcat
-Copy the WAR to your Tomcat `webapps` folder:
-```bash
-cp target/SmartCampusAPI.war /path/to/tomcat/webapps/
-```
-Then start Tomcat:
-```bash
-/path/to/tomcat/bin/startup.sh   # Linux/macOS
-/path/to/tomcat/bin/startup.bat  # Windows
-```
-
-### Step 4 – Verify the server is running
-```bash
-curl http://localhost:8080/SmartCampusAPI/api/v1
-```
+1. Open the SmartCampusAPI project in NetBeans.
+2. Make sure Apache Tomcat 9 is configured in NetBeans under Window → Services → Servers.
+3. Right-click the project and select **Clean and Build**.
+4. Right-click the project and select **Run**.
+5. When prompted to select a deployment server, choose **Apache Tomcat 9.0.117** and select **Remember Permanently**.
+6. Wait for Tomcat to start — you will see the server log appear in the NetBeans output console.
+7. Open Postman or a browser and access the API using:
+   [http://localhost:8080/SmartCampusAPI/api/v1](http://localhost:8080/SmartCampusAPI/api/v1)
 
 ---
 
@@ -102,6 +121,17 @@ curl http://localhost:8080/SmartCampusAPI/api/v1
 | DELETE | `/api/v1/sensors/{sensorId}` | Delete a sensor |
 | GET | `/api/v1/sensors/{sensorId}/readings` | Get all readings for a sensor |
 | POST | `/api/v1/sensors/{sensorId}/readings` | Post a new reading |
+
+---
+
+### Exception Mapping
+| Exception | HTTP Code | Scenario |
+|---|---|---|
+| NotFoundExceptionMapper | 404 | Resource not found |
+| RoomNotEmptyException | 409 | Cannot delete room with sensors |
+| LinkedResourceNotFoundException | 422 | Invalid room reference in sensor payload |
+| SensorUnavailableException | 403 | Sensor is under MAINTENANCE |
+| GlobalExceptionMapper | 500 | Unexpected server error |
 
 ---
 
